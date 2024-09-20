@@ -1,3 +1,10 @@
-#QMainWindow{
-    background-color: black;
+CalendarWindow{
+    background-color: silver;
+    border-radius: 10px;
+}
+
+#newbtn{
+    border-radius:  8px;
+    font-size: 20px;
+    color: silver;
 }

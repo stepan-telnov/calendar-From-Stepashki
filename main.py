@@ -1,20 +1,44 @@
 import os
 
+from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter, QPen, QBrush, QColor
 
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = r'C:\Users\Админ\AppData\Local\Programs\Python\Python311\Lib\site-packages\PyQt5\Qt5\plugins\platforms'
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
 
 
 class CalendarWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        #Window
         self.setWindowTitle(" ")
         self.setGeometry(100, 100, 600, 400)
-        self.setStyleSheet("style.css")
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowMaximizeButtonHint)
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setWindowOpacity(0.6)
+
+        #style_CSS
+        with open("style.css") as style:
+            css = style.read()
+        self.setStyleSheet(css)
+
+        #Btn_Exit
+        self.test = QPushButton(parent = self, text = "⨉")
+        self.test.setObjectName("newbtn")
+        self.test.setGeometry(575, 8, 20, 20)
+        self.test.clicked.connect(self.close)
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        rounded_rect = self.rect().adjusted(0, 0, -1, -1)
+        painter.setBrush(QBrush(QColor("black")))
+        painter.setPen(QPen(Qt.PenStyle.DashLine))
+        painter.drawRoundedRect(rounded_rect, 10, 10)
+
 
 
 if __name__ == "__main__":
