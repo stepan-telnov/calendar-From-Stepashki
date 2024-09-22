@@ -1,38 +1,48 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtGui import QColor, QPainter, QBrush, QPen
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPoint
 import os
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QDesktopWidget
 
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = r'C:\Users\Админ\AppData\Local\Programs\Python\Python311\Lib\site-packages\PyQt5\Qt5\plugins\platforms'
 
 
-class RoundedWindow(QMainWindow):
+class cssden(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Окно с округленными рамками")
-        self.setWindowFlags(QtCore.Qt.WindowType.FramelessWindowHint)  # удаляем системную рамку
-        self.setGeometry(100, 100, 500, 400)
-        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)  # удаляем фон
-        #self.setStyleSheet("background-color: #303030;")
+        # <MainWindow Properties>
+        self.setFixedSize(320, 450)
+        self.setStyleSheet("QMainWindow{background-color: darkgray;border: 1px solid black}")
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.center()
+        # </MainWindow Properties>
 
+        # <Label Properties>
+        self.lbl = QLabel(self)
+        self.lbl.setText("test")
+        self.lbl.setStyleSheet("QLabel{background-color: rgb(0,0,0); border: 1px solid red; color: rgb(255,255,255); font: bold italic 20pt 'Times New Roman';}")
+        self.lbl.setGeometry(5, 5, 60, 40)
+        # </Label Properties>
+
+        self.oldPos = self.pos()
         self.show()
 
-    # \/рисуем окно\/#
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        rounded_rect = self.rect().adjusted(0, 0, -1, -1)
-        painter.setBrush(QBrush(QColor("#303030")))
-        painter.setPen(QPen(Qt.PenStyle.NoPen))
-        painter.drawRoundedRect(rounded_rect, 10, 10)
-    # /\рисуем окно/\
+    def center(self):
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+    def mousePressEvent(self, event):
+        self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        delta = QPoint (event.globalPos() - self.oldPos)
+        self.move(self.x() + delta.x(), self.y() + delta.y())
+        self.oldPos = event.globalPos()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    roundedWindow = RoundedWindow()
-    roundedWindow.show()
-    sys.exit(app.exec())
+    ex = cssden()
+    sys.exit(app.exec_())
