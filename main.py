@@ -17,7 +17,7 @@ class CalendarWindow(QMainWindow):
         self.setWindowTitle(" ")
         self.widthWindow = 600
         self.heightWindow = 400
-        self.setGeometry(100, 100, self.widthWindow, self.heightWindow)
+        self.setGeometry(1500, 100, self.widthWindow, self.heightWindow)
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setWindowOpacity(0.9)
@@ -35,6 +35,7 @@ class CalendarWindow(QMainWindow):
         self.test.setObjectName("newbtn")
         self.test.setGeometry(self.widthWindow - 25, 8, 20, 20)
         self.test.clicked.connect(self.close)
+
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -63,15 +64,20 @@ class CalendarWindow(QMainWindow):
 
         painter.drawPath(path)
 
+
+        #leftBorderMainSuperPuperOmega+version1000000000-300Menu
+        painter.drawRect(0, 32, 100, 100)
+
+
     def mousePressEvent(self, event):
         self.oldPos:QPoint = event.globalPos()
 
 
     def mouseMoveEvent(self, event):
-        print(event.globalPos())
-        delta = QPoint (event.globalPos() - self.oldPos)    # todo: остановились здесь, нужно вместо глобалПос вставить коорды квадрата
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.oldPos = event.globalPos()
+        if 0 <= event.x() <= self.widthWindow and 0 <= event.y() <= 32:
+            delta = QPoint (event.globalPos() - self.oldPos)
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.oldPos = event.globalPos()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
