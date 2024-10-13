@@ -1,48 +1,53 @@
 import sys
-from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtGui import QPainter, QPainterPath, QColor
+from PyQt5.QtCore import QRectF
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QDesktopWidget
 
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = r'C:\Users\Админ\AppData\Local\Programs\Python\Python311\Lib\site-packages\PyQt5\Qt5\plugins\platforms'
 
-
-class cssden(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("Квадрат с закруглением")
+        self.setGeometry(100, 100, 400, 400)
 
-        # <MainWindow Properties>
-        self.setFixedSize(320, 450)
-        self.setStyleSheet("QMainWindow{background-color: darkgray;border: 1px solid black}")
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.center()
-        # </MainWindow Properties>
+    def paintEvent(self, event):
+        painter = QPainter(self)
 
-        # <Label Properties>
-        self.lbl = QLabel(self)
-        self.lbl.setText("test")
-        self.lbl.setStyleSheet("QLabel{background-color: rgb(0,0,0); border: 1px solid red; color: rgb(255,255,255); font: bold italic 20pt 'Times New Roman';}")
-        self.lbl.setGeometry(5, 5, 60, 40)
-        # </Label Properties>
+        # Создаем путь для рисования квадрата с закруглением внизу справа
+        path = QPainterPath()
 
-        self.oldPos = self.pos()
-        self.show()
+        # Размер и позиция квадрата
+        rect = QRectF(50, 50, 200, 200)
 
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
+        # Добавляем линии для сторон квадрата
+        path.moveTo(rect.topLeft())
+        path.lineTo(rect.topRight())
 
-    def mousePressEvent(self, event):
-        self.oldPos = event.globalPos()
+        # Закругляем нижний правый угол
+        corner_radius = 50
+        path.lineTo(rect.right(), rect.bottom() - corner_radius)
+        path.arcTo(
+            rect.right() - 2 * corner_radius,
+            rect.bottom() - 2 * corner_radius,
+            2 * corner_radius,
+            2 * corner_radius,
+            0,
+            -90
+        )
 
-    def mouseMoveEvent(self, event):
-        delta = QPoint (event.globalPos() - self.oldPos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.oldPos = event.globalPos()
+        # Завершаем путь до нижнего левого угла
+        path.lineTo(rect.bottomLeft())
+        path.lineTo(rect.topLeft())
+
+        # Рисуем путь
+        painter.setBrush(QColor("lightblue"))
+        painter.drawPath(path)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = cssden()
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec_())

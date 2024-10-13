@@ -31,10 +31,17 @@ class CalendarWindow(QMainWindow):
         self.setStyleSheet(css)
 
         #Btn_Exit
-        self.test = QPushButton(parent = self, text = "⨉")
-        self.test.setObjectName("newbtn")
-        self.test.setGeometry(self.widthWindow - 25, 8, 20, 20)
-        self.test.clicked.connect(self.close)
+        self.btnExit = QPushButton(parent = self, text ="⨉")
+        self.btnExit.setObjectName("newbtn")
+        self.btnExit.setGeometry(self.widthWindow - 25, 8, 20, 20)
+        self.btnExit.clicked.connect(self.close)
+
+        # Btn_Main_menu
+        self.btnMain = QPushButton(parent=self, text="🏡")
+        self.btnMain.setObjectName("newbtn")
+        self.isOpenMain = True
+        self.btnMain.setGeometry(self.widthWindow - 25, 8, 20, 20)
+        self.btnMain.clicked.connect(self.close)
 
 
     def paintEvent(self, event):
@@ -48,6 +55,7 @@ class CalendarWindow(QMainWindow):
         #grabBorder
         painter.setBrush(QBrush(QColor("#222222")))
         rectf = QRectF(0.0, 0.0, self.widthWindow, 35.0)
+        rectf2 = QRectF(0, 32, 150, self.heightWindow)
         self.widthGrabBorder = rectf.width()
         self.heightGrabBorder = rectf.height()
         print(self.widthGrabBorder, self.heightGrabBorder)
@@ -66,7 +74,15 @@ class CalendarWindow(QMainWindow):
 
 
         #leftBorderMainSuperPuperOmega+version1000000000-300Menu
-        painter.drawRect(0, 32, 100, 100)
+        path2 = QPainterPath()
+        path2.moveTo(rectf2.topLeft())
+        path2.lineTo(rectf2.bottomLeft())
+        path2.lineTo(rectf2.bottomRight())
+        path2.lineTo(rectf2.topRight())
+        path2.arcTo(rectf2.right() - 20, rectf2.top(), 20, 20, 0, 90)
+        path2.arcTo(rectf2.left(), rectf2.top(), 20, 20, 90, 90)
+
+        painter.drawPath(path2)
 
 
     def mousePressEvent(self, event):
