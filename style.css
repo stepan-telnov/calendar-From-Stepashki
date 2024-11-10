@@ -8,3 +8,54 @@ CalendarWindow{
     font-size: 15px;
     color: silver;
 }
+
+#text_hi{
+    font-family: Consolas;
+    color: aliceblue;
+    font-size: 25px;
+}
+
+#btnEditName{
+    border: 3px solid #222222;
+    font-size: 15px;
+    border-radius: 10px;
+    background: #2a2a2a;
+    letter-spacing: 1.5px;
+    color: aliceblue;
+}
+
+#btnEditName:hover{
+    border: 3px solid #383838;
+    font-size: 15px;
+    border-radius: 10px;
+    background: #484848;
+    letter-spacing: 1.5px;
+    color: aliceblue;
+}
+
+#home_btn{
+    font-family: Consolas;
+    font-size: 17px;
+    background: #2a2a2a;
+    letter-spacing: 1.5px;
+    color: aliceblue;
+}
+
+#calendar_btn{
+    font-family: Consolas;
+    font-size: 15px;
+    background: #2a2a2a;
+    color: aliceblue;
+}
+
+#text_CurTime_DayNow{
+    font-family: Consolas;
+    font-size: 35px;
+    color: aliceblue;
+}
+
+#text_Year_DayWeek{
+    font-family: Consolas;
+    font-size: 25px;
+    color: aliceblue;
+}
