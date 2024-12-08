@@ -65,3 +65,9 @@ CalendarWindow{
     font-size: 15px;
     color: #00000096;
 }
+
+#text_riadMy_Timer{
+    font-family: Consolas;
+    font-size: 25px;
+    color: aliceblue;
+}

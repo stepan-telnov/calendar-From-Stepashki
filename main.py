@@ -70,7 +70,7 @@ class CalendarWindow(QMainWindow):
         self.btnTimer = QPushButton(parent=self, text="Timer")
         self.btnTimer.setObjectName("home_btn")
         self.btnTimer.setGeometry(0, 95, 150, 30)
-        self.btnTimer.clicked.connect(lambda: self.updateStates(2))
+        self.btnTimer.clicked.connect(lambda: self.updateStates(3))
 
         # Btns================================================================================================Btns
 
@@ -110,20 +110,25 @@ class CalendarWindow(QMainWindow):
         self.text_Year_DayWeek.setGeometry(self.widthWindow // 2 + 140, self.heightWindow // 2 - 190, 300, 100)
 
         #Timer_menu
-
+        self.text_riadMy_Timer = QLabel(parent=self, text=f"choose the time for which you\nwant to set the timer, the\nday of the week is not\nnecessary")
+        self.text_riadMy_Timer.setObjectName("text_riadMy_Timer")
+        self.text_riadMy_Timer.setGeometry(self.widthWindow // 2 - 130, self.heightWindow // 2 - 180, 700, 150)
 
         # lobis==============================================================================================lobis
+        self.updateStates()
 
     def updateStates(self, num=1):
         self.states = num
         self.hideLobis()
 
     def hideLobis(self):
+
         if self.states == -1:
             self.btnEditName.hide()
             self.text_hi.hide()
             self.text_CurTime_DayNow.hide()
             self.text_Year_DayWeek.hide()
+            self.text_riadMy_Timer.hide()
 
             calafulWindow = QColorDialog.getColor()
 
@@ -135,12 +140,21 @@ class CalendarWindow(QMainWindow):
             self.text_hi.show()
             self.text_CurTime_DayNow.hide()
             self.text_Year_DayWeek.hide()
+            self.text_riadMy_Timer.hide()
 
         if self.states == 2:
             self.text_CurTime_DayNow.show()
             self.text_Year_DayWeek.show()
             self.btnEditName.hide()
             self.text_hi.hide()
+            self.text_riadMy_Timer.hide()
+
+        if self.states == 3:
+            self.text_CurTime_DayNow.hide()
+            self.text_Year_DayWeek.hide()
+            self.btnEditName.hide()
+            self.text_hi.hide()
+            self.text_riadMy_Timer.show()
 
 
 
