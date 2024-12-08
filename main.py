@@ -4,13 +4,13 @@ import subprocess
 import datetime
 
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QRectF, QPoint
+from PyQt5.QtCore import Qt, QRectF, QPoint, QTimer
 from PyQt5.QtGui import QPainter, QPen, QBrush, QColor, QPainterPath
 
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = r'C:\Users\Админ\AppData\Local\Programs\Python\Python311\Lib\site-packages\PyQt5\Qt5\plugins\platforms'
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QColorDialog
 
 
 class CalendarWindow(QMainWindow):
@@ -42,6 +42,12 @@ class CalendarWindow(QMainWindow):
         self.btnExit.setGeometry(self.widthWindow - 25, 8, 20, 20)
         self.btnExit.clicked.connect(self.close)
 
+        # Btn_Options
+        self.btnOp = QPushButton(parent=self, text="⚙️")
+        self.btnOp.setObjectName("op_btn")
+        self.btnOp.setGeometry(10, self.heightWindow - 30, 20, 20)
+        self.btnOp.clicked.connect(lambda:self.updateStates(-1))
+
         #Btn_Main_menu
         self.btnMain = QPushButton(parent=self, text="Home")
         self.btnMain.setObjectName("home_btn")
@@ -60,6 +66,12 @@ class CalendarWindow(QMainWindow):
         self.btnCalendar.setGeometry(0, 65, 150, 30)
         self.btnCalendar.clicked.connect(lambda:self.updateStates(2))
 
+        # Btn_Timer_menu
+        self.btnTimer = QPushButton(parent=self, text="Timer")
+        self.btnTimer.setObjectName("home_btn")
+        self.btnTimer.setGeometry(0, 95, 150, 30)
+        self.btnTimer.clicked.connect(lambda: self.updateStates(2))
+
         # Btns================================================================================================Btns
 
 
@@ -71,24 +83,34 @@ class CalendarWindow(QMainWindow):
         self.text_hi.setGeometry(self.widthWindow // 2 - len(self.text_hi.text()) * 2, self.heightWindow // 2 - 150, 300, 100)
 
         # Calendar_menu
-        now = datetime.datetime.now()
+        #curTime = now.strftime("%H:%M")
+        #dayNow = now.strftime("%d")     <- это стиреть но инфа важна
 
-        curTime = now.strftime("%H:%M")
-        dayNow = now.strftime("%d")
+        #year = now.strftime("%Y")
+        #dayWeek = now.strftime("%A")
 
-        year = now.strftime("%Y")
-        dayWeek = now.strftime("%A")
+        self.text_CurTime_DayNow = QLabel(parent=self, text=f"")
+        self.text_Year_DayWeek = QLabel(parent=self, text=f"")
 
-        self.text_CurTime_DayNow = QLabel(parent=self, text=f"{curTime} {dayNow}")
-        self.text_Year_DayWeek = QLabel(parent=self, text=f"{year} {dayWeek}")
+        self.text_CurTime_DayNow.hide()
+        self.text_Year_DayWeek.hide()
 
         self.text_CurTime_DayNow.setObjectName("text_CurTime_DayNow")
         self.text_Year_DayWeek.setObjectName("text_Year_DayWeek")
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000)
+
+        self.update_time()
 
         #ToDo: не работает кнопка крестик, время не идет, размеры скачут, и впереди собака -> @
 
         self.text_CurTime_DayNow.setGeometry(self.widthWindow // 2 - 140, self.heightWindow // 2 - 190, 300, 100)
         self.text_Year_DayWeek.setGeometry(self.widthWindow // 2 + 140, self.heightWindow // 2 - 190, 300, 100)
+
+        #Timer_menu
+
 
         # lobis==============================================================================================lobis
 
@@ -97,13 +119,29 @@ class CalendarWindow(QMainWindow):
         self.hideLobis()
 
     def hideLobis(self):
+        if self.states == -1:
+            self.btnEditName.hide()
+            self.text_hi.hide()
+            self.text_CurTime_DayNow.hide()
+            self.text_Year_DayWeek.hide()
+
+            calafulWindow = QColorDialog.getColor()
+
+            if calafulWindow.isValid():
+                self.setStyleSheet(f"background-color: {calafulWindow.name()};")
+
         if self.states == 1:
             self.btnEditName.show()
             self.text_hi.show()
+            self.text_CurTime_DayNow.hide()
+            self.text_Year_DayWeek.hide()
 
         if self.states == 2:
+            self.text_CurTime_DayNow.show()
+            self.text_Year_DayWeek.show()
             self.btnEditName.hide()
             self.text_hi.hide()
+
 
 
     def openWindows_Microsoft_System(self):
@@ -148,6 +186,13 @@ class CalendarWindow(QMainWindow):
         path2.arcTo(rectf2.left(), rectf2.top(), 20, 20, 90, 90)
 
         painter.drawPath(path2)
+
+
+    def update_time(self):
+        current_time = datetime.datetime.now().strftime("%H:%M")
+        current_year = datetime.datetime.now().strftime("%Y %A")
+        self.text_CurTime_DayNow.setText(current_time)
+        self.text_Year_DayWeek.setText(current_year)
 
 
     def mousePressEvent(self, event):

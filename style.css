@@ -59,3 +59,9 @@ CalendarWindow{
     font-size: 25px;
     color: aliceblue;
 }
+
+#op_btn{
+    border-radius:  8px;
+    font-size: 15px;
+    color: #00000096;
+}
