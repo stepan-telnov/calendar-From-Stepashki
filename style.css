@@ -9,6 +9,10 @@ CalendarWindow{
     color: silver;
 }
 
+#leftGrabBorder{
+    background: #ff0000;
+}
+
 #text_hi{
     font-family: Consolas;
     color: aliceblue;
