@@ -75,3 +75,27 @@ CalendarWindow{
     font-size: 25px;
     color: aliceblue;
 }
+
+#text_hoverMinSek_Timer{
+    font-family: Consolas;
+    font-size: 40px;
+    color: aliceblue;
+}
+
+#btnStartTimer{
+    border: 3px solid #1d5105;
+    font-size: 15px;
+    border-radius: 10px;
+    background: #52bc4b;
+    letter-spacing: 1.5px;
+    color: #27571b;
+}
+
+#btnRestartTimer{
+    border: 3px solid #640808;
+    font-size: 15px;
+    border-radius: 10px;
+    background: #c25959;
+    letter-spacing: 1.5px;
+    color: #711b1b;
+}

@@ -4,7 +4,7 @@ import subprocess
 import datetime
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtCore import Qt, QRectF, QPoint, QTimer
 from PyQt5.QtGui import QPainter, QPen, QBrush, QColor, QPainterPath
 
@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QCol
 class CalendarWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        #Window
+        #Window Todo: аФиГеНнО ПеРеДеЛаТь КоД ))))
         try:
             self.setWindowTitle(" ")
             self.widthWindow = 600
@@ -47,13 +47,6 @@ class CalendarWindow(QMainWindow):
 
             self.widg = QWidget()
             self.widg.setGeometry(100, 300, 100, 300)
-            self.setStyleSheet("""
-            QWidget {
-                background-color: #3498db; /* Синий цвет фона */
-                border: 2px solid #2980b9; /* Тёмно-синий цвет рамки */
-                border-radius: 0px; /* Без закруглений */
-            }
-        """)
 
             #Btn_Exit
             self.btnExit = QPushButton(parent = self, text ="⨉")
@@ -66,6 +59,17 @@ class CalendarWindow(QMainWindow):
             self.btnOp.setObjectName("op_btn")
             self.btnOp.setGeometry(10, self.heightWindow - 30, 20, 20)
             self.btnOp.clicked.connect(lambda:self.updateStates(-1))
+
+            # btn_hoverMinSek_Timer_Start
+            self.btnHoverMinSek_Timer = QPushButton(parent=self, text="Start")
+            self.btnHoverMinSek_Timer.setObjectName("btnStartTimer")
+            self.btnHoverMinSek_Timer.setGeometry((self.widthWindow + 150) // 2 - 3, self.heightWindow - 50, 90, 40)
+            #self.btnHoverMinSek_Timer.clicked.connect()
+
+            # btn_hoverMinSek_Timer_Restart
+            self.btnHoverMinSek_Timer = QPushButton(parent=self, text="Restart")
+            self.btnHoverMinSek_Timer.setObjectName("btnRestartTimer")
+            self.btnHoverMinSek_Timer.setGeometry((self.widthWindow + 150) // 2 - 110, self.heightWindow - 50, 90, 40)
 
             #Btn_Main_menu
             self.btnMain = QPushButton(parent=self, text="Home")
@@ -104,13 +108,16 @@ class CalendarWindow(QMainWindow):
             # Change background
             self.btnChangeBackground = QPushButton(parent=self, text="Change background")
             self.btnChangeBackground.setObjectName("home_btn")
-            self.btnChangeBackground.setGeometry(150, 35, 150, 30)
+            self.btnChangeBackground.setGeometry(300, 35, 150, 30)
+            self.btnChangeBackground.clicked.connect(self.change_color_background)
             # self.btnChangeBackground.clicked.connect()
 
             # Change foreground
             self.btnChangeForeground = QPushButton(parent=self, text="Change foreground")
             self.btnChangeForeground.setObjectName("home_btn")
-            self.btnChangeForeground.setGeometry(300, 35, 150, 30)
+            self.btnChangeForeground.setGeometry(300, 80, 150, 30)
+            self.btnChangeForeground.clicked.connect(self.change_color_foreground)
+
             # self.btnChangeBackground.clicked.connect()
 
 
@@ -152,41 +159,45 @@ class CalendarWindow(QMainWindow):
 
             self.update_time()
 
-            #ToDo: не работает кнопка крестик, время не идет, размеры скачут, и впереди собака -> @
-
             self.text_CurTime_DayNow.setGeometry(self.widthWindow // 2 - 140, self.heightWindow // 2 - 190, 300, 100)
             self.text_Year_DayWeek.setGeometry(self.widthWindow // 2 + 140, self.heightWindow // 2 - 190, 300, 100)
 
             #Timer_menu
             self.text_riadMy_Timer = QLabel(parent=self, text=f"choose the time")
             self.text_riadMy_Timer.setObjectName("text_riadMy_Timer")
-            self.text_riadMy_Timer.setGeometry(self.widthWindow // 2 - 50, self.heightWindow // 2 - 180, 700, 150)
+            self.text_riadMy_Timer.setGeometry(self.widthWindow // 2 - 30, self.heightWindow // 2 - 180, 700, 150)
+
+            self.text_hoverMinSek_Timer = QLabel(parent=self, text=f"00h : 00m : 00s")
+            self.text_hoverMinSek_Timer.setObjectName("text_hoverMinSek_Timer")
+            self.text_hoverMinSek_Timer.setGeometry(self.widthWindow // 2 - 80, self.heightWindow // 2 - 100, 700, 150)
 
             # lobis==============================================================================================lobis
             self.updateStates()
         except Exception as err:
             print(err)
 
-        self.setStyleSheet("""
-                    QPainter {
-                        background-color: #2ecc71;
-                        border: 2px solid #27ae60;
-                        border-radius: 25px;
-                    }
-                """)
+        #self.setStyleSheet("""
+        #            QPainter {
+        #                background-color: #2ecc71;
+        #                border: 2px solid #27ae60;
+        #                border-radius: 25px;
+        #            }
+        #        """)
 
     def updateStates(self, num=1):
         self.states = num
         self.hideLobis()
 
     def hideLobis(self):
-
         if self.states == -2:
-            pass
+            self.btnChangeBackground.show()
+            self.btnChangeForeground.show()
+            self.text_hoverMinSek_Timer.hide()
 
         if self.states == -1:
             self.btnChangeColor.show()
             self.btnKek.show()
+            self.text_hoverMinSek_Timer.hide()
 
             self.btnTimer.hide()
             self.btnCalendar.hide()
@@ -197,11 +208,8 @@ class CalendarWindow(QMainWindow):
             self.text_CurTime_DayNow.hide()
             self.text_Year_DayWeek.hide()
             self.text_riadMy_Timer.hide()
-
-            # calafulWindow = QColorDialog.getColor()
-
-            # if calafulWindow.isValid():
-            #     self.setStyleSheet(f"background-color: {calafulWindow.name()};")
+            self.btnChangeBackground.hide()
+            self.btnChangeForeground.hide()
 
         if self.states == 1:
             self.btnEditName.show()
@@ -211,6 +219,10 @@ class CalendarWindow(QMainWindow):
             self.text_riadMy_Timer.hide()
             self.btnChangeColor.hide()
             self.btnKek.hide()
+            self.text_hoverMinSek_Timer.hide()
+
+            self.btnChangeBackground.hide()
+            self.btnChangeForeground.hide()
 
         if self.states == 2:
             self.text_CurTime_DayNow.show()
@@ -218,6 +230,9 @@ class CalendarWindow(QMainWindow):
             self.btnEditName.hide()
             self.text_hi.hide()
             self.text_riadMy_Timer.hide()
+            self.btnChangeBackground.hide()
+            self.btnChangeBackground.hide()
+            self.text_hoverMinSek_Timer.hide()
 
         if self.states == 3:
             self.text_CurTime_DayNow.hide()
@@ -225,8 +240,32 @@ class CalendarWindow(QMainWindow):
             self.btnEditName.hide()
             self.text_hi.hide()
             self.text_riadMy_Timer.show()
+            self.btnChangeBackground.hide()
+            self.btnChangeBackground.hide()
+            self.text_hoverMinSek_Timer.show()
+
+    def change_color_background(self):
+        calafulWindow = QColorDialog.getColor()
+
+        if calafulWindow.isValid():
+            self.setStyleSheet(f"background-color: {calafulWindow.name()};")
+    
+    def change_color_foreground(self):
+        error_dialog = QMessageBox()
+        error_dialog.setIcon(QMessageBox.Critical)
+        error_dialog.setWindowTitle("Ашыбка")
+        error_dialog.setText("Ещё раз нажмёшь на эту кнопку😡😡")  
+        error_dialog.setInformativeText("ERROR 228: введите os.remove('C:/windows')")
+        error_dialog.setStandardButtons(QMessageBox.Ok)
+        
+        error_dialog.exec_()
 
 
+
+        # calafulWindow = QColorDialog.getColor()
+
+        # if calafulWindow.isValid():
+        #     self.setStyleSheet(f"background-color: {calafulWindow.name()};")
 
     def openWindows_Microsoft_System(self):
         subprocess.run(['control', '/name', 'Microsoft.System'])
